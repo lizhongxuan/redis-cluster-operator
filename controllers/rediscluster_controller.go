@@ -19,19 +19,19 @@ package controllers
 import (
 	"context"
 
-	appsv1 "k8s.io/api/apps/v1"
 	"github.com/go-logr/logr"
+	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	cachev1 "redis-cluster-operator/api/v1"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	cachev1 "redis-cluster-operator/api/v1"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 // RedisClusterReconciler reconciles a RedisCluster object
@@ -44,8 +44,8 @@ type RedisClusterReconciler struct {
 // +kubebuilder:rbac:groups=cache.example.com,resources=redisclusters,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=cache.example.com,resources=redisclusters/status,verbs=get;update;patch
 
-func (r *RedisClusterReconciler) Reconcile(ctx context.Context,req ctrl.Request) (ctrl.Result, error) {
-	reqLogger := r.Log.WithValues("rediscluster", req.NamespacedName,  "Request.Name", req.Name)
+func (r *RedisClusterReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
+	reqLogger := r.Log.WithValues("rediscluster", req.NamespacedName, "Request.Name", req.Name)
 	reqLogger.Info("Reconciling RedisCluster")
 
 	// Fetch the RedisCluster instance
@@ -60,7 +60,6 @@ func (r *RedisClusterReconciler) Reconcile(ctx context.Context,req ctrl.Request)
 		// Error reading the object - requeue the request.
 		return reconcile.Result{}, err
 	}
-
 
 	// Check if the deployment already exists, if not create a new deployment.
 	found := &appsv1.Deployment{}
